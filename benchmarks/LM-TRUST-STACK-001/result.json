@@ -1,0 +1,13 @@
+{
+  "benchmark": "LM-TRUST-STACK-001",
+  "executed_at": "2026-10-02",
+  "status": "EXECUTED_LOCAL_REFERENCE",
+  "cases": 100,
+  "lm_correct": 100,
+  "conventional_correct": 100,
+  "parity": 100,
+  "parity_rate": 1.0,
+  "residual_difference": 0,
+  "claim_disposition": "NULL_FOR_LM_SPECIFIC_ADVANTAGE",
+  "external_network_operations": false
+}
