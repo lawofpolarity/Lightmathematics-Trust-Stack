@@ -1,0 +1,1 @@
+export function normalizeEASAttestation(input={}){return {protocol:"eas",chain_id:input.chain_id??null,schema_uid:input.schema_uid??null,attestation_uid:input.attestation_uid??null,attester:input.attester??null,recipient:input.recipient??null,revoked:Boolean(input.revoked),verified:Boolean(input.verified)};}
