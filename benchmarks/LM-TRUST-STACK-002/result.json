@@ -1,0 +1,1 @@
+{"benchmark":"LM-TRUST-STACK-002","executed_at":"2026-10-02","status":"EXECUTED_LOCAL_EQUAL_INFORMATION","cases":100,"families":{"mutation_reopen":{"cases":50,"parity":50},"handoff_projection":{"cases":50,"parity":50}},"parity":100,"parity_rate":1.0,"residual_difference":0,"claim_disposition":"NULL_FOR_LM_SPECIFIC_ADVANTAGE","external_network_operations":false}
