@@ -1,0 +1,49 @@
+openapi: 3.1.0
+info:
+  title: LightMathematics Trust Stack API
+  version: 0.1.0
+  description: Shared verification and semantic-reliance API for lightmathematics.ai and lightmathematics.io.
+servers:
+  - url: https://trust.lightmathematics.io
+paths:
+  /v1/capabilities:
+    get:
+      operationId: getCapabilities
+      responses:
+        '200': {description: Capability and deployed-version manifest}
+  /v1/vra/verify:
+    post:
+      operationId: verifyVra
+      responses:
+        '200': {description: VRA verification result}
+  /v1/reliance/qualify:
+    post:
+      operationId: qualifyReliance
+      responses:
+        '200': {description: Operation-relative semantic reliance result}
+  /v1/transitions/verify:
+    post:
+      operationId: verifyTransition
+      responses:
+        '200': {description: Transition verification result}
+  /v1/artifacts/{id}/status:
+    get:
+      operationId: getArtifactStatus
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        '200': {description: Current artifact status}
+  /v1/artifacts/{id}/history:
+    get:
+      operationId: getArtifactHistory
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        '200': {description: Ordered transition history}
+  /v1/receipts/{id}:
+    get:
+      operationId: getReceipt
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: string}}
+      responses:
+        '200': {description: Receipt and verification manifest}
