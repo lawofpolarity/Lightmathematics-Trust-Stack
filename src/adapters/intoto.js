@@ -1,0 +1,2 @@
+export const INTOTO_STATEMENT_TYPE="https://in-toto.io/Statement/v1";export const LM_RELIANCE_PREDICATE="https://lightmathematics.ai/predicates/reliance/v1";
+export function toInTotoStatement(vra){return {_type:INTOTO_STATEMENT_TYPE,subject:[{name:vra.artifact_id,digest:{[vra.canonical_digest.algorithm]:vra.canonical_digest.value}}],predicateType:LM_RELIANCE_PREDICATE,predicate:vra.semantic_reliance};}
