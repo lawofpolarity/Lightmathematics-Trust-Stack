@@ -1,0 +1,1 @@
+export function normalizeERC8004Identity(input={}){return {protocol:"erc-8004",chain_id:input.chain_id??null,identity_registry:input.identity_registry??null,agent_id:input.agent_id??null,reputation_registry:input.reputation_registry??null,validation_refs:[...(input.validation_refs??[])],verified:Boolean(input.verified)};}
