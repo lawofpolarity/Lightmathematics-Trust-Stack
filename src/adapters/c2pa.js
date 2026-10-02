@@ -1,0 +1,1 @@
+export function normalizeC2PA(input={}){return {protocol:"c2pa",manifest_ref:input.manifest_ref??null,asset_digest:input.asset_digest??null,signature_verified:Boolean(input.signature_verified),provenance_verified:Boolean(input.provenance_verified),validation_status:[...(input.validation_status??[])]};}
