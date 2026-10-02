@@ -1,0 +1,1 @@
+export function project(object,fields){const out={};for(const f of fields)if(Object.prototype.hasOwnProperty.call(object,f))out[f]=object[f];return out;}export function projectionLoss(original,projected,decisionFields){return decisionFields.filter(f=>original[f]!==undefined&&projected[f]===undefined);}
