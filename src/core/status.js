@@ -1,0 +1,1 @@
+export const RELIANCE_STATUSES=Object.freeze(["ALLOW","REVIEW","REFUSE","STALE","UNRESOLVED","NOT_EVALUATED"]);export function isRelianceStatus(v){return RELIANCE_STATUSES.includes(v);}
