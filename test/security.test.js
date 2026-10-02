@@ -1,0 +1,5 @@
+import test from "node:test";import assert from "node:assert/strict";import {detectRollback,detectFreeze,detectMixAndMatch,nonEscalation} from "../src/security/tuf-controls.js";
+test("rollback detected",()=>assert.equal(detectRollback({presented_version:4,known_version:5}),true));
+test("freeze detected",()=>assert.equal(detectFreeze({now_ms:Date.parse("2026-10-02T12:00:00Z"),expires_at:"2026-10-02T11:00:00Z"}),true));
+test("mix and match detected",()=>assert.equal(detectMixAndMatch([{governed_epoch:1},{governed_epoch:2}]),true));
+test("external trust cannot elevate semantic authority",()=>{const before={semantic_authority:"LOW",reliance_status:"REVIEW"};const after=nonEscalation(before,{payment:"SETTLED",reputation:"HIGH"});assert.equal(after.semantic_authority,"LOW");assert.equal(after.reliance_status,"REVIEW");});
