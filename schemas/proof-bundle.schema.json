@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lightmathematics.ai/schemas/proof-bundle/v1",
+  "title": "LM Proof Bundle v1",
+  "type": "object",
+  "required": ["bundle_version", "verification_manifest"],
+  "properties": {
+    "bundle_version": {"const": "1.0.0"},
+    "semantic_reliance": {"type": ["object", "null"]},
+    "transition_receipts": {"type": "array", "items": {"type": "object"}},
+    "content_credentials": {"type": "array", "items": {"type": "object"}},
+    "production_attestations": {"type": "array", "items": {"type": "object"}},
+    "public_attestations": {"type": "array", "items": {"type": "object"}},
+    "transparency_proofs": {"type": "array", "items": {"type": "object"}},
+    "agent_identity": {"type": "array", "items": {"type": "object"}},
+    "authorization_refs": {"type": "array", "items": {"type": "object"}},
+    "runtime_trace_refs": {"type": "array", "items": {"type": "object"}},
+    "payment_receipts": {"type": "array", "items": {"type": "object"}},
+    "verification_manifest": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": true
+}
