@@ -1,0 +1,2 @@
+#!/usr/bin/env node
+import fs from "node:fs";import {verifyVRA} from "../core/verify.js";const file=process.argv[2];if(!file){console.error("usage: npm run verify -- <vra.json>");process.exit(2);}const result=verifyVRA(JSON.parse(fs.readFileSync(file,"utf8")));console.log(JSON.stringify(result,null,2));process.exit(result.valid?0:1);
