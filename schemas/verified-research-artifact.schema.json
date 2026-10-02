@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lightmathematics.ai/schemas/verified-research-artifact/v1",
+  "title": "Verified Research Artifact v1",
+  "type": "object",
+  "required": [
+    "artifact_id", "version", "artifact_type", "subject",
+    "canonical_digest", "created_at", "semantic_reliance", "proof_bundle"
+  ],
+  "properties": {
+    "artifact_id": {"type": "string", "minLength": 1},
+    "version": {"type": ["string", "integer"]},
+    "artifact_type": {"type": "string", "minLength": 1},
+    "subject": {"type": "object"},
+    "canonical_digest": {
+      "type": "object",
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": {"type": "string"},
+        "value": {"type": "string"}
+      }
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "semantic_reliance": {"$ref": "./reliance-envelope.schema.json"},
+    "proof_bundle": {"$ref": "./proof-bundle.schema.json"}
+  },
+  "additionalProperties": true
+}
