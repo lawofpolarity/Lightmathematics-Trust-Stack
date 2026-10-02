@@ -3,7 +3,7 @@ import postgres from "npm:postgres@3.4.7";
 
 const VERSION={trust_stack_version:"0.1.0",schema_version:"1.0.0",environment:"production"};
 const json=(body:unknown,status=200)=>Response.json(body,{status});
-const pathOf=(req:Request)=>new URL(req.url).pathname.replace(/^\/functions\/v1\/trust-api/,"");
+const pathOf=(req:Request)=>{const pathname=new URL(req.url).pathname;const marker="/trust-api";const i=pathname.indexOf(marker);return i>=0?(pathname.slice(i+marker.length)||"/"):pathname;};
 const sql=postgres(Deno.env.get("SUPABASE_DB_URL")!,{prepare:false,max:1});
 
 export default {
