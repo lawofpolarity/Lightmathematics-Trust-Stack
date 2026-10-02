@@ -1,0 +1,15 @@
+Lightmathematics Trust Stack
+Copyright 2026 Bernard Yankson / LightMathematics
+
+This product includes interoperability specifications and reference material
+that may reference third-party open standards and projects, including C2PA,
+in-toto, TUF, Sigstore/Rekor, SCITT, Ethereum Attestation Service, ERC-8004,
+Model Context Protocol, Agent2Agent, OpenTelemetry, Langfuse, x402 and AP2.
+
+Those projects retain their own names, trademarks, licenses and governance.
+Reference to an external project does not imply endorsement, certification,
+affiliation, or conformance.
+
+No payment, signature, blockchain inclusion, attestation, identity record,
+reputation score, transparency entry, or provenance record automatically
+confers LightMathematics semantic authority or scientific validity.
