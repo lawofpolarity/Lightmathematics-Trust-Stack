@@ -1,0 +1,1 @@
+export function normalizeLangfuseTrace(input={}){return {protocol:"langfuse",trace_ref:input.trace_ref??null,observation_refs:[...(input.observation_refs??[])],evaluation_refs:[...(input.evaluation_refs??[])]};}
