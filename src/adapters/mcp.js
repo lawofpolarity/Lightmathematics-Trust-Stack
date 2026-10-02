@@ -1,0 +1,1 @@
+export function normalizeMcpAuthorization(input={}){return {protocol:"mcp-oauth",authorized:Boolean(input.authorized),principal_ref:input.principal_ref??null,scopes:[...(input.scopes??[])],resource_ref:input.resource_ref??null,authorization_ref:input.authorization_ref??null};}
