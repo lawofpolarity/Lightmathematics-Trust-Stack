@@ -1,0 +1,1 @@
+export function attachRelianceEnvelope(artifact,envelope){return {...artifact,metadata:{...(artifact.metadata??{}),"lightmathematics.reliance":envelope}};}export function readRelianceEnvelope(artifact){return artifact?.metadata?.["lightmathematics.reliance"]??null;}
