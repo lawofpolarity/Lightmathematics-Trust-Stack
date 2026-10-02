@@ -1,0 +1,1 @@
+{"name":"@lightmathematics/trust-stack","version":"0.1.0","private":false,"type":"module","description":"Reference implementation of LM Trust Stack v1","scripts":{"test":"node --test","verify":"node src/cli/verify-vra.js"},"engines":{"node":">=20"},"license":"Apache-2.0"}
