@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lightmathematics.ai/schemas/reliance-envelope/v1",
+  "title": "LM Reliance Envelope v1",
+  "type": "object",
+  "required": ["artifact_id", "artifact_version", "operation_scope", "reliance_status", "contract_version"],
+  "properties": {
+    "artifact_id": {"type": "string", "minLength": 1},
+    "artifact_version": {"type": ["string", "integer"]},
+    "operation_scope": {"type": "string", "minLength": 1},
+    "reliance_status": {
+      "type": "string",
+      "enum": ["ALLOW", "REVIEW", "REFUSE", "STALE", "UNRESOLVED", "NOT_EVALUATED"]
+    },
+    "dependencies": {"type": "array", "items": {"type": "string"}},
+    "evidence": {"type": "array", "items": {"type": "object"}},
+    "provenance": {"type": "array", "items": {"type": "object"}},
+    "authority": {"type": "array", "items": {"type": "object"}},
+    "qualifiers": {"type": "array", "items": {"type": "string"}},
+    "temporal_state": {"type": "object"},
+    "unresolved_conditions": {"type": "array", "items": {"type": "string"}},
+    "losses": {"type": "array", "items": {"type": "object"}},
+    "discharge_witnesses": {"type": "array", "items": {"type": "object"}},
+    "currentness": {"type": "object"},
+    "contract_version": {"const": "1.0.0"}
+  },
+  "additionalProperties": true
+}
