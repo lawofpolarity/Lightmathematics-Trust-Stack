@@ -1,0 +1,1 @@
+import {affectedBy} from "./dependency-graph.js";export function minimalReopenSet(graph,changed,evaluations){const affected=affectedBy(graph,changed),reopen=[];for(const id of affected){const r=evaluations.get(id);if(!r?.eligible)reopen.push(id);}return reopen.sort();}
