@@ -1,0 +1,5 @@
+import test from "node:test";import assert from "node:assert/strict";import {attachRelianceEnvelope,readRelianceEnvelope} from "../src/adapters/a2a.js";import {toInTotoStatement,INTOTO_STATEMENT_TYPE} from "../src/adapters/intoto.js";import {lmTelemetryAttributes} from "../src/adapters/opentelemetry.js";
+const env={artifact_id:"a",artifact_version:1,operation_scope:"test",reliance_status:"ALLOW",contract_version:"1.0.0"};
+test("A2A carries LM envelope without altering it",()=>{const a=attachRelianceEnvelope({artifactId:"x"},env);assert.deepEqual(readRelianceEnvelope(a),env);});
+test("in-toto statement binds subject and predicate",()=>{const s=toInTotoStatement({artifact_id:"a",canonical_digest:{algorithm:"sha256",value:"abc"},semantic_reliance:env});assert.equal(s._type,INTOTO_STATEMENT_TYPE);assert.equal(s.predicate,env);});
+test("telemetry excludes semantic payload",()=>{const a=lmTelemetryAttributes({artifact_id:"a",reliance_status:"ALLOW",secret:"do-not-export"});assert.equal(a["lm.artifact.id"],"a");assert.equal("secret" in a,false);});
