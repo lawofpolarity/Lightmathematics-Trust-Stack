@@ -7,7 +7,7 @@ const pathOf=(req:Request)=>new URL(req.url).pathname.replace(/^\/functions\/v1\
 const sql=postgres(Deno.env.get("SUPABASE_DB_URL")!,{prepare:false,max:1});
 
 export default {
-  fetch: withSupabase({auth:"none"}, async (req)=>{
+  fetch: withSupabase({auth:"secret"}, async (req)=>{
     const path=pathOf(req);
     if(req.method==="GET"&&path==="/v1/capabilities") return json({...VERSION,capabilities:{vra_verify:"ACTIVE",reliance_qualify:"ACTIVE",transition_verify:"ACTIVE",artifact_status:"ACTIVE",artifact_history:"ACTIVE",receipts:"ACTIVE",mcp:"READY",a2a:"READY",x402:"TESTNET_EXTERNAL",ap2:"ADAPTER_READY",eas:"NOT_CONFIGURED",rekor:"NOT_CONFIGURED",scitt:"COMPARATOR",c2pa:"ADAPTER_READY",erc8004:"NOT_CONFIGURED"}});
     if(req.method==="POST"&&path==="/v1/vra/verify"){const v=await req.json();const required=["artifact_id","version","artifact_type","subject","canonical_digest","semantic_reliance","proof_bundle"];const missing=required.filter(k=>v?.[k]===undefined);return json({valid:missing.length===0,errors:missing.map(k=>"missing "+k),artifact_id:v?.artifact_id??null,reliance_status:v?.semantic_reliance?.reliance_status??"NOT_EVALUATED",runtime:VERSION},missing.length?400:200);}
