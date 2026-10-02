@@ -1,0 +1,51 @@
+{
+  "artifact_id": "urn:lm:vra:sigma:example-001",
+  "version": 1,
+  "artifact_type": "sigma_research_object",
+  "subject": {
+    "name": "Example Sigma Research Artifact",
+    "canonical": false,
+    "example_only": true
+  },
+  "canonical_digest": {
+    "algorithm": "sha256",
+    "value": "EXAMPLE-NOT-A-REAL-DIGEST"
+  },
+  "created_at": "2026-10-02T00:00:00Z",
+  "semantic_reliance": {
+    "artifact_id": "urn:lm:vra:sigma:example-001",
+    "artifact_version": 1,
+    "operation_scope": "schema demonstration only",
+    "reliance_status": "NOT_EVALUATED",
+    "dependencies": [],
+    "evidence": [],
+    "provenance": [],
+    "authority": [],
+    "qualifiers": ["example_only", "not_canonical"],
+    "unresolved_conditions": ["no_semantic_evaluation_performed"],
+    "losses": [],
+    "discharge_witnesses": [],
+    "currentness": {"evaluated": false},
+    "contract_version": "1.0.0"
+  },
+  "proof_bundle": {
+    "bundle_version": "1.0.0",
+    "semantic_reliance": null,
+    "transition_receipts": [],
+    "content_credentials": [],
+    "production_attestations": [],
+    "public_attestations": [],
+    "transparency_proofs": [],
+    "agent_identity": [],
+    "authorization_refs": [],
+    "runtime_trace_refs": [],
+    "payment_receipts": [],
+    "verification_manifest": [
+      {
+        "proof_type": "example_fixture",
+        "verification_status": "NOT_EVALUATED",
+        "limitations": "Demonstration object only."
+      }
+    ]
+  }
+}
