@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lightmathematics.ai/schemas/transition-receipt/v1",
+  "title": "LM Transition Receipt v1",
+  "type": "object",
+  "required": [
+    "receipt_id", "artifact_id", "from_version", "to_version",
+    "transition_type", "predecessor_digest", "successor_digest",
+    "order", "disposition", "created_at"
+  ],
+  "properties": {
+    "receipt_id": {"type": "string"},
+    "artifact_id": {"type": "string"},
+    "from_version": {"type": ["string", "integer"]},
+    "to_version": {"type": ["string", "integer"]},
+    "transition_type": {"type": "string"},
+    "predecessor_digest": {"type": "string"},
+    "successor_digest": {"type": "string"},
+    "authority_event": {"type": ["object", "null"]},
+    "evidence_event": {"type": ["object", "null"]},
+    "order": {"type": "integer", "minimum": 0},
+    "disposition": {"type": "string"},
+    "unresolved_obligations_before": {"type": "array", "items": {"type": "string"}},
+    "unresolved_obligations_after": {"type": "array", "items": {"type": "string"}},
+    "recoverable_history": {"type": "boolean"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": true
+}
