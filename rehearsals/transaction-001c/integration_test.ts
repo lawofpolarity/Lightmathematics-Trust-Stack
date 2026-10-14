@@ -17,11 +17,13 @@ Deno.test("48 concurrent signed requests consume one nonce",async()=>{
   const b=await payload("same","same-request");
   await Deno.writeTextFile("/tmp/lm-replay-payload.json",JSON.stringify(b));
   const results=await Promise.all(Array.from({length:48},()=>post(b)));
+  console.log("CONCURRENCY_EVIDENCE",JSON.stringify({accepted:results.filter(r=>r.status===200).length,rejected:results.filter(r=>r.status===409).length}));
   assertEquals(results.filter(r=>r.status===200).length,1);
   assertEquals(results.filter(r=>r.status===409).length,47);
   const rows=await admin`SELECT * FROM lm_rehearsal.receipts WHERE request_id='same-request'`;
   assertEquals(rows.length,1);assertEquals(rows[0].payment_state,"NO_FUNDS");
   assertEquals(rows[0].decision,"UNRESOLVED");
+  console.log("RECEIPT_EVIDENCE",JSON.stringify({receipts:rows.length,payment_state:rows[0].payment_state,decision:rows[0].decision}));
 });
 Deno.test("revocation rejects valid signed requests",async()=>{
   await admin`UPDATE lm_rehearsal.issuers SET revoked=true WHERE issuer_id='test-issuer'`;
