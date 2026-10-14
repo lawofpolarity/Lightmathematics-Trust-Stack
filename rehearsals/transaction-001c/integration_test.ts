@@ -15,6 +15,7 @@ async function payload(nonce:string,request_id:string) {
 async function post(b:unknown) {return fetch(base+"/v1/inspect",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)});}
 Deno.test("48 concurrent signed requests consume one nonce",async()=>{
   const b=await payload("same","same-request");
+  await Deno.writeTextFile("/tmp/lm-replay-payload.json",JSON.stringify(b));
   const results=await Promise.all(Array.from({length:48},()=>post(b)));
   assertEquals(results.filter(r=>r.status===200).length,1);
   assertEquals(results.filter(r=>r.status===409).length,47);
@@ -46,5 +47,14 @@ Deno.test("invalid signature does not consume nonce",async()=>{
   b.operation_scope="changed-after-signing";
   assertEquals((await post(b)).status,403);
   const rows=await admin`SELECT consumed_at FROM lm_rehearsal.nonces WHERE nonce='persist'`;
+  assertEquals(rows[0].consumed_at,null);
+});
+
+Deno.test("receipt insertion failure rolls back nonce consumption",async()=>{
+  await admin`INSERT INTO lm_rehearsal.nonces(issuer_id,nonce) VALUES ('test-issuer','rollback')`;
+  // A request-id collision must fail receipt insertion after claiming a fresh nonce.
+  const b=await payload("rollback","same-request");
+  assertEquals((await post(b)).status,503);
+  const rows=await admin`SELECT consumed_at FROM lm_rehearsal.nonces WHERE nonce='rollback'`;
   assertEquals(rows[0].consumed_at,null);
 });
