@@ -30,10 +30,36 @@ jobs:
         env:
           DATABASE_URL: postgres://lm_rehearsal_app:disposable-only@localhost:5432/rehearsal
         run: |
-          deno run -A rehearsals/transaction-001c/server.ts &
-          sleep 20
+          deno run -A rehearsals/transaction-001c/server.ts > /tmp/lm-verifier.log 2>&1 &
+          echo $! > /tmp/lm-verifier.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8787/health; then break; fi
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:8787/health
       - name: Run tests
         env:
           ADMIN_DATABASE_URL: postgres://postgres:testonly@localhost:5432/rehearsal
           UNTRUSTED_DATABASE_URL: postgres://lm_rehearsal_untrusted:disposable-only@localhost:5432/rehearsal
         run: deno test -A rehearsals/transaction-001c/integration_test.ts
+      - name: Restart verifier and assert replay still rejected
+        env:
+          DATABASE_URL: postgres://lm_rehearsal_app:disposable-only@localhost:5432/rehearsal
+        run: |
+          kill "$(cat /tmp/lm-verifier.pid)"
+          for i in $(seq 1 20); do
+            if ! kill -0 "$(cat /tmp/lm-verifier.pid)" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          deno run -A rehearsals/transaction-001c/server.ts > /tmp/lm-verifier-restarted.log 2>&1 &
+          echo $! > /tmp/lm-verifier-restarted.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8787/health; then break; fi
+            sleep 2
+          done
+          code=$(curl -s -o /tmp/lm-replay-response.json -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/json' \
+            --data-binary @/tmp/lm-replay-payload.json \
+            http://127.0.0.1:8787/v1/inspect)
+          test "$code" = "409"
+          grep -q 'replay' /tmp/lm-replay-response.json
