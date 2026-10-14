@@ -47,7 +47,13 @@ jobs:
         env:
           ADMIN_DATABASE_URL: postgres://postgres:testonly@localhost:5432/rehearsal
           UNTRUSTED_DATABASE_URL: postgres://lm_rehearsal_untrusted:disposable-only@localhost:5432/rehearsal
-        run: |\n          deno test --node-modules-dir=auto -A rehearsals/transaction-001c/integration_test.ts || {\n            echo "::group::Sanitized verifier diagnostics"\n            grep "VERIFIER_FAILURE_CLASS" /tmp/lm-verifier.log || true\n            echo "::endgroup::"\n            exit 1\n          }
+        run: |
+          deno test --node-modules-dir=auto -A rehearsals/transaction-001c/integration_test.ts || {
+            echo "::group::Sanitized verifier diagnostics"
+            grep "VERIFIER_FAILURE_CLASS" /tmp/lm-verifier.log || true
+            echo "::endgroup::"
+            exit 1
+          }
       - name: Restart verifier and assert replay still rejected
         env:
           DATABASE_URL: postgres://lm_rehearsal_app:disposable-only@localhost:5432/rehearsal
