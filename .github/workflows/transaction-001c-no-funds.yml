@@ -36,7 +36,11 @@ jobs:
             if curl -fsS http://127.0.0.1:8787/health; then break; fi
             sleep 2
           done
-          curl -fsS http://127.0.0.1:8787/health
+          if ! curl -fsS http://127.0.0.1:8787/health; then
+            echo "::error::Deno verifier failed to become ready; startup log follows"
+            cat /tmp/lm-verifier.log
+            exit 1
+          fi
       - name: Run tests
         env:
           ADMIN_DATABASE_URL: postgres://postgres:testonly@localhost:5432/rehearsal
@@ -61,5 +65,10 @@ jobs:
             -H 'Content-Type: application/json' \
             --data-binary @/tmp/lm-replay-payload.json \
             http://127.0.0.1:8787/v1/inspect)
-          test "$code" = "409"
+          if [ "$code" != "409" ]; then
+            echo "::error::Restart replay expected 409, got $code"
+            cat /tmp/lm-verifier-restarted.log
+            cat /tmp/lm-replay-response.json
+            exit 1
+          fi
           grep -q 'replay' /tmp/lm-replay-response.json
