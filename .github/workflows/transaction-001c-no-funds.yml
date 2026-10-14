@@ -1,6 +1,10 @@
 name: Disposable no-funds integration
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'rehearsals/transaction-001c/**'
+      - '.github/workflows/transaction-001c-no-funds.yml'
 jobs:
   integration:
     runs-on: ubuntu-latest
