@@ -17,9 +17,22 @@ Deno.serve({hostname:"127.0.0.1",port:8787},async req=>{
     const key=await crypto.subtle.importKey("jwk",issuers[0].public_jwk,{name:"Ed25519"},false,["verify"]);
     const message=JSON.stringify([b.issuer_id,b.nonce,b.request_id,b.operation_scope,b.artifact_id]);
     if(!await crypto.subtle.verify("Ed25519",key,bytes(b.signature),new TextEncoder().encode(message)))return reply({error:"invalid signature"},403);
-    const claimed=await db`UPDATE lm_rehearsal.nonces SET consumed_at=now() WHERE issuer_id=${b.issuer_id} AND nonce=${b.nonce} AND consumed_at IS NULL RETURNING nonce`;
-    if(claimed.length!==1)return reply({error:"replay"},409);
-    await db`INSERT INTO lm_rehearsal.receipts(request_id,issuer_id,nonce,decision,payment_state) VALUES (${b.request_id},${b.issuer_id},${b.nonce},'UNRESOLVED','NO_FUNDS')`;
+    // Lock issuer inside the same transaction as nonce claim and receipt creation.
+    // A concurrent revocation must serialize with this lock.
+    const outcome=await db.begin(async tx=>{
+      const active=await tx`SELECT issuer_id FROM lm_rehearsal.issuers
+        WHERE issuer_id=${b.issuer_id} AND revoked=false FOR UPDATE`;
+      if(active.length!==1)return "revoked";
+      const claimed=await tx`UPDATE lm_rehearsal.nonces SET consumed_at=now()
+        WHERE issuer_id=${b.issuer_id} AND nonce=${b.nonce}
+        AND consumed_at IS NULL RETURNING nonce`;
+      if(claimed.length!==1)return "replay";
+      await tx`INSERT INTO lm_rehearsal.receipts(request_id,issuer_id,nonce,decision,payment_state)
+        VALUES (${b.request_id},${b.issuer_id},${b.nonce},'UNRESOLVED','NO_FUNDS')`;
+      return "accepted";
+    });
+    if(outcome==="revoked")return reply({error:"issuer revoked"},403);
+    if(outcome==="replay")return reply({error:"replay"},409);
     return reply({authenticated:true,receipt:{request_id:b.request_id,decision:"UNRESOLVED",payment_state:"NO_FUNDS"}});
   }catch{return reply({error:"unavailable"},503);}
 });
