@@ -1,0 +1,35 @@
+name: Disposable no-funds integration
+on:
+  workflow_dispatch:
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: testonly
+          POSTGRES_DB: rehearsal
+        ports:
+          - 5432:5432
+        options: --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Database schema
+        env:
+          PGPASSWORD: testonly
+        run: psql -h localhost -U postgres -d rehearsal -v ON_ERROR_STOP=1 -f rehearsals/transaction-001c/schema.sql
+      - name: Start verifier
+        env:
+          DATABASE_URL: postgres://lm_rehearsal_app:disposable-only@localhost:5432/rehearsal
+        run: |
+          deno run -A rehearsals/transaction-001c/server.ts &
+          sleep 20
+      - name: Run tests
+        env:
+          ADMIN_DATABASE_URL: postgres://postgres:testonly@localhost:5432/rehearsal
+          UNTRUSTED_DATABASE_URL: postgres://lm_rehearsal_untrusted:disposable-only@localhost:5432/rehearsal
+        run: deno test -A rehearsals/transaction-001c/integration_test.ts
