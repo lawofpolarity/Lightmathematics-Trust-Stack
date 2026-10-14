@@ -17,11 +17,10 @@ Deno.serve({hostname:"127.0.0.1",port:8787},async req=>{
     const key=await crypto.subtle.importKey("jwk",issuers[0].public_jwk,{name:"Ed25519"},false,["verify"]);
     const message=JSON.stringify([b.issuer_id,b.nonce,b.request_id,b.operation_scope,b.artifact_id]);
     if(!await crypto.subtle.verify("Ed25519",key,bytes(b.signature),new TextEncoder().encode(message)))return reply({error:"invalid signature"},403);
-    // Lock issuer inside the same transaction as nonce claim and receipt creation.
-    // A concurrent revocation must serialize with this lock.
+    // One transaction couples nonce consumption and receipt creation; rollback on insertion failure.
     const outcome=await db.begin(async tx=>{
       const active=await tx`SELECT issuer_id FROM lm_rehearsal.issuers
-        WHERE issuer_id=${b.issuer_id} AND revoked=false FOR UPDATE`;
+        WHERE issuer_id=${b.issuer_id} AND revoked=false`;
       if(active.length!==1)return "revoked";
       const claimed=await tx`UPDATE lm_rehearsal.nonces SET consumed_at=now()
         WHERE issuer_id=${b.issuer_id} AND nonce=${b.nonce}
