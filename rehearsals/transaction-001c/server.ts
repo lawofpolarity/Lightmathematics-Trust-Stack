@@ -33,5 +33,9 @@ Deno.serve({hostname:"127.0.0.1",port:8787},async req=>{
     if(outcome==="revoked")return reply({error:"issuer revoked"},403);
     if(outcome==="replay")return reply({error:"replay"},409);
     return reply({authenticated:true,receipt:{request_id:b.request_id,decision:"UNRESOLVED",payment_state:"NO_FUNDS"}});
-  }catch{return reply({error:"unavailable"},503);}
+  }catch(e){
+    // Local-only CI diagnostic: expose the error class, never database credentials or message text.
+    console.error("VERIFIER_FAILURE_CLASS",e instanceof Error ? e.name : "UnknownError");
+    return reply({error:"unavailable"},503);
+  }
 });
