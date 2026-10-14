@@ -30,3 +30,14 @@ Inspect the newest Actions run after commit 94da824d, fix any failing step based
 
 ## Governance
 Disposable local-only testing; no production data, deposits, funds, settlement, deployment or canonical research modification.
+
+## CI run #11 — confirmed evidence and correction
+- GitHub run: https://github.com/lawofpolarity/Lightmathematics-Trust-Stack/actions/runs/38603709457/job/115989103767
+- Database schema: **success**.
+- Install Deno npm dependency: **success**.
+- Start verifier: **success** (HTTP service reached startup step).
+- Run tests: **failure** during static TypeScript checking, before tests ran.
+- Restart verifier: **skipped**.
+- Exact errors: TS2339 `publicKey` and `privateKey` do not exist on union type `CryptoKeyPair | CryptoKey` at integration_test.ts lines 7 and 13.
+- Corrective commit: `4da673e4ba274c5c61f8709297b8f9107bae9ea0`; narrows result of `crypto.subtle.generateKey` to a CryptoKeyPair using runtime property checks. Type checking stays enabled.
+- **Gate status**: G3 startup is observed but full G3 acceptance and G4/G5 executable integration remain pending green CI and operational results. No accepted 48-request concurrency outcome is claimed.
