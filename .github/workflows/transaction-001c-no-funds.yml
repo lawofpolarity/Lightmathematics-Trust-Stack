@@ -57,7 +57,7 @@ jobs:
             if ! kill -0 "$(cat /tmp/lm-verifier.pid)" 2>/dev/null; then break; fi
             sleep 1
           done
-          deno run -A rehearsals/transaction-001c/server.ts > /tmp/lm-verifier-restarted.log 2>&1 &
+          deno run --node-modules-dir=auto -A rehearsals/transaction-001c/server.ts > /tmp/lm-verifier-restarted.log 2>&1 &
           echo $! > /tmp/lm-verifier-restarted.pid
           for i in $(seq 1 30); do
             if curl -fsS http://127.0.0.1:8787/health; then break; fi
